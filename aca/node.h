@@ -29,7 +29,7 @@ private:
     int node_id, depth;
     std::string value;
     std::map<std::string, NodePtr> outs;
-    NodeVector matches;
+    IntVector matches;
 public:
     CppNode(const int node_id, const int depth);
     CppNode(const int node_id, const int depth, const std::string& value);

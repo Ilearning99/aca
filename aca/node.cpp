@@ -43,7 +43,7 @@ void CppNode::set_outnode(const std::string& key, const NodePtr value) {
 }
 
 void CppNode::add_match(const NodePtr node) {
-    matches.push_back(node);
+    matches.push_back(node->get_id());
 }
 
 bool CppNode::operator==(const CppNode& n) const {

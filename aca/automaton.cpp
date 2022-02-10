@@ -150,11 +150,11 @@ void CppAutomaton::remove_duplicate_matches() {
     for (int i=0 ; i<nodes.size() ; ++i) {
         std::set<int> s;
         for (int j=0 ; j<nodes[i]->matches.size() ; ++j) {
-            s.insert(nodes[i]->matches[j]->get_id());
+            s.insert(nodes[i]->matches[j]);
         }
         nodes[i]->matches.clear();
         for (auto j=s.begin() ; j != s.end() ; ++j) {
-            nodes[i]->matches.push_back(nodes[*j]);
+            nodes[i]->matches.push_back(*j);
         }
     }
 }
@@ -175,7 +175,8 @@ MatchVector CppAutomaton::get_matches(const StringVector& text, const bool exclu
             std::cout << "matching pos " << idx << " " << text[idx] << " with node " << node->node_id << " value " << node->value << std::endl;
         #endif
         if (node->value != "") {
-            for (NodePtr resnode : node->matches) {
+            for (auto node_id : node->matches) {
+                NodePtr resnode = nodes[node_id];
                 const int start = idx - resnode->depth;
                 const int end = idx + 1;
                 if (start < end) {
@@ -285,7 +286,7 @@ void CppAutomaton::serialize_to_stream(std::ostream& os) {
         os << MATCHES_MARKER << " " << node->matches.size();
         for (int k=0 ; k<node->matches.size() ; ++k) {
             os << " ";
-            os << node->matches[k]->node_id;
+            os << node->matches[k];
         }
         os << " ";
     }
@@ -397,7 +398,7 @@ CppAutomaton* CppAutomaton::deserialize_from_stream(std::istream& is) {
         for (int j=0 ; j<matchsize ; ++j) {
             int matchid;
             is >> matchid;
-            node->matches.push_back(cppauto->nodes[matchid]);
+            node->matches.push_back(matchid);
         }
     }
     cppauto->root = cppauto->nodes[0];
